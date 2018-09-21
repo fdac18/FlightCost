@@ -1,5 +1,7 @@
 # FlightCost
  Final project analyzing flight data from the Bureau of Transportation to compare average ticket costs across airports in TN.
+## Proposal
+(Overleaf)[https://www.overleaf.com/19908399gnnxykdhzmbk]
 ## To-Do
 - Determine *specific* goals for the project (i.e. what all do we want to present at the end of the semester? what kind of results will be most interesting to people?)
 
