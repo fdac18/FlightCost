@@ -65,7 +65,7 @@ if __name__ == '__main__':
     merged = market.merge(ticket, left_on='ItinID', right_on='ItinID', how='outer')
     if (len(merged) != len(market)):
         print("The result of the merge produced a file with a different row count than expected (it should match the row count of the Market csv). Double check to see if the resulting file looks correct!")
-    merged.to_csv(output_name)
+    merged.to_csv(output_name, index=False)
     print("Successfully merged {} and {} into {}!".format(sys.argv[1], sys.argv[2], output_name))
 
     print("Attempting to clean up temporary directories....")
