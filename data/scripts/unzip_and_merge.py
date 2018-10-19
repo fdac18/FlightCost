@@ -3,6 +3,7 @@ import sys
 import os
 import shutil
 import zipfile
+import numpy as np
 import pandas as pd
 
 def renameFile(file_tmp, file_dest):
@@ -57,6 +58,7 @@ if __name__ == '__main__':
 
     t_cols = ['ItinID', 'OnLine', 'FarePerMile', 'ItinFare', 'MilesFlown', 'RoundTrip']
     m_cols = ['ItinID', 'MktID', 'Year', 'Quarter', 'Origin', 'OriginState', 'Dest', 'DestState', 'AirportGroup', 'TkCarrier', 'OpCarrier', 'MktFare', 'MktMilesFlown', 'RPCarrier', 'BulkFare', 'Passengers']
+    ordered_cols = ['ItinID', 'MktID', 'Dest', 'DestState', 'AirportGroup', 'TkCarrier', 'OpCarrier', 'MktFare', 'MktMilesFlown', 'Year', 'Quarter', 'Origin', 'OriginState', 'RoundTrip', 'OnLine', 'FarePerMile', 'RPCarrier', 'Passengers', 'ItinFare', 'BulkFare', 'MilesFlown']
 
     market = pd.read_csv('market_temp/Q1_2015_Market.csv', usecols=m_cols)
     ticket = pd.read_csv('ticket_temp/Q1_2015_Ticket.csv', usecols=t_cols)
@@ -65,10 +67,14 @@ if __name__ == '__main__':
     merged = market.merge(ticket, left_on='ItinID', right_on='ItinID', how='outer')
     if (len(merged) != len(market)):
         print("The result of the merge produced a file with a different row count than expected (it should match the row count of the Market csv). Double check to see if the resulting file looks correct!")
-    merged.to_csv(output_name, index=False)
+    merged = merged[ordered_cols]
+    merged.insert(0, 'ID', 'NULL');
+    merged.to_csv(output_name, index=False, header=False)
     print("Successfully merged {} and {} into {}!".format(sys.argv[1], sys.argv[2], output_name))
 
     print("Attempting to clean up temporary directories....")
     shutil.rmtree('market_temp/')
     shutil.rmtree('ticket_temp/')
+    os.rename(market_name, market_name[:-4] + '_MERGED.zip')
+    os.rename(ticket_name, ticket_name[:-4] + '_MERGED.zip')
     print("Successfully cleaned up the temporary directories!")
