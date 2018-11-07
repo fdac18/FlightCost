@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import MySQLdb
 import numpy as np
+import matplotlib.pylot as plt
 
 def extractDataODQ():
     db = MySQLdb.connect(host="10.16.0.3",    # your host, usually localhost
@@ -15,8 +16,6 @@ def extractDataODQ():
     quarter = raw_input('input quarter of flight: ')
 
     command = 'Select * FROM HistoricalData WHERE Origin = "' + origin + '" AND Dest = "' + dest + '" AND Quarter = "' + quarter + '"'
-    #for troubleshooting
-    #print(command)
 
     cur.execute(command)
     result1 = cur.fetchall()
@@ -60,8 +59,6 @@ def extractDataOD():
     dest = raw_input('Input destination airport: ')
 
     command = 'Select * FROM HistoricalData WHERE Origin = "' + origin + '" AND Dest = "' + dest + '"'
-    #for troubleshooting
-    #print(command)
 
     cur.execute(command)
     result2 = cur.fetchall()
@@ -69,7 +66,7 @@ def extractDataOD():
     db.close()
     return result2
 
-
+# Returns average cost per flight
 def avgCostperQ():
 
     origin = raw_input('Input origin airport: ')
@@ -82,17 +79,31 @@ def avgCostperQ():
 
     return avgCost
 
+# Internal function for passing arguments within 
+## another function
+def avgCostperQinternal(origin, dest, quart):
+    prices=extractPassPriceODQ(origin, dest, quart)
 
-#for troubleshooting
-#data1 = extractDataODQ()
-#for row in data1:
-#    print "info:"
-#    print row
-#    print '\n'
+    avgCost= np.mean(prices)
+    return avgCost
 
-#data2 = extractDataOD()
+# Create plot of yearly trend
+def yearlyTrend():
 
-#for row in data2:
-#    print "info:"
-#    print row
-#    print '\n'
+    origin = raw_input('Input origin airport: ')
+    dest = raw_input('Input destination airport: ')
+
+    cost=[]
+    for i in range(1,5):
+        cost.append(avgCostperQinternal(origin, dest, i))
+
+    plt.style.use('ggplot')
+    plt.suptitle("Yearly Trend of Flight Cost Per Passenger")
+    plt.title(origin + ' to ' + dest)
+    plt.plot(range(1, 5), cost, c="b")
+    plt.ylabel("Cost in USD ($)")
+    plt.xlabel("Fiscal Quarter")
+    plt.xticks(range(1,5), ('Jan-Mar', 'Apr-Jun', 'Jul-Sep', 'Oct-Dec'))
+    plt.savefig("./yearlyTrend_"+origin+"_"+dest+".pdf")
+
+
