@@ -1,5 +1,6 @@
 #!/usr/bin/python3
 import sys
+import subprocess
 import os
 import shutil
 import zipfile
@@ -60,8 +61,8 @@ if __name__ == '__main__':
     m_cols = ['ItinID', 'MktID', 'Year', 'Quarter', 'Origin', 'OriginState', 'Dest', 'DestState', 'AirportGroup', 'TkCarrier', 'OpCarrier', 'MktFare', 'MktMilesFlown', 'RPCarrier', 'BulkFare', 'Passengers']
     ordered_cols = ['ItinID', 'MktID', 'Dest', 'DestState', 'AirportGroup', 'TkCarrier', 'OpCarrier', 'MktFare', 'MktMilesFlown', 'Year', 'Quarter', 'Origin', 'OriginState', 'RoundTrip', 'OnLine', 'FarePerMile', 'RPCarrier', 'Passengers', 'ItinFare', 'BulkFare', 'MilesFlown']
 
-    market = pd.read_csv('market_temp/Q1_2015_Market.csv', usecols=m_cols)
-    ticket = pd.read_csv('ticket_temp/Q1_2015_Ticket.csv', usecols=t_cols)
+    market = pd.read_csv(market_dest, usecols=m_cols)
+    ticket = pd.read_csv(ticket_dest, usecols=t_cols)
     print("Successfully read in both files into dataframe. Begin processing...")
 
     merged = market.merge(ticket, left_on='ItinID', right_on='ItinID', how='outer')
@@ -71,6 +72,10 @@ if __name__ == '__main__':
     merged.insert(0, 'ID', 'NULL');
     merged.to_csv(output_name, index=False, header=False)
     print("Successfully merged {} and {} into {}!".format(sys.argv[1], sys.argv[2], output_name))
+
+    print("Attempting to move the file to the Google Storage Bucket")
+    command = 'gsutil cp {} gs://merged_data'.format(output_name).split()
+    move_file = subprocess.call(command)
 
     print("Attempting to clean up temporary directories....")
     shutil.rmtree('market_temp/')
