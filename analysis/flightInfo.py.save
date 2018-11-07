@@ -1,0 +1,563 @@
+#!/usr/bin/python
+import MySQLdb
+
+def extractDataODQ():
+    db = MySQLdb.connect(host="10.16.0.3",    # your host, usually localhost
+            user="root",         # your username
+            passwd="flight-cost18",  # your password
+            db="FlightData")        # name of the data base
+
+    cur = db.cursor()
+
+    origin = raw_input('Input origin airport: ')
+    dest = raw_input('Input destination airport: ')
+    quarter = raw_input('Input quarter of flight: ')
+
+    command = 'Select * FROM HistoricalData WHERE Origin = "' + origin + '" AND Dest = "' + dest + '" AND Quarter = "' + quarter + '"'
+    #for troubleshooting
+    #print(command)
+
+    cur.execute(command)
+    result1 = cur.fetchall()
+
+    db.close()
+    return result1
+
+    #I am keeping this here just to show a possible average Query 
+    #cur.execute('SELECT AVG(mktFare) FROM HistoricalData WHERE Origin = "ATL" AND Dest = "LAX" AND Quarter = "1" AND Passengers = "1"')
+
+def extractDataOD():
+    db = MySQLdb.connect(host="10.16.0.3",    # your host, usually localhost
+            user="root",         # your username
+            passwd="flight-cost18",  # your password
+            db="FlightData")        # name of the data base
+
+    cur = db.cursor()
+
+    origin = raw_input('Input origin airport: ')
+    dest = raw_input('Input destination airport: ')
+
+    command = 'Select * FROM HistoricalData WHERE Origin = "' + origin + '" AND Dest = "' + dest + '"'
+    #for troubleshooting
+    #print(command)
+
+    cur.execute(command)
+    result2 = cur.fetchall()
+
+    db.close()
+    return result2
+
+#for troubleshooting
+#data1 = extractDataODQ()
+
+#for row in data1:
+#    print "info:"
+#    print row
+#    print '\n'
+
+#data2 = extractDataOD()
+
+#for row in data2:
+#    print "info:"
+#    print row
+#    print '\n'
+
+def averageCost(
+Last login: Thu Nov  1 11:27:49 on ttys002
+(Cai)~ :ssh da2
+  [Restored Nov 1, 2018, 12:26:54 PM]
+Last login: Thu Nov  1 12:26:24 on console
+Restored session: Thu Nov 1 12:18:47 EDT 2018
+(Cai)~ :ssh da2
+cjohn3@da2.eecs.utk.edu's password: 
+Welcome to Ubuntu 16.04.5 LTS (GNU/Linux 3.10.0-514.2.2.el7.x86_64 x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/advantage
+Last login: Thu Nov  1 16:04:15 2018 from 216.96.197.211
+cjohn3@6f65a9451746 ~ % ls
+FlightCost  gcloud  MiniProject1  Practice0
+cjohn3@6f65a9451746 ~ % git clone https://github.com/caiwjohn/MiniProject2.git
+Cloning into 'MiniProject2'...
+remote: Enumerating objects: 8, done.
+remote: Counting objects: 100% (8/8), done.
+remote: Compressing objects: 100% (8/8), done.
+remote: Total 41 (delta 0), reused 5 (delta 0), pack-reused 33
+Unpacking objects: 100% (41/41), done.
+Checking connectivity... done.
+cjohn3@6f65a9451746 ~ % ls
+FlightCost  gcloud  MiniProject1  MiniProject2	Practice0
+cjohn3@6f65a9451746 ~ % cd MiniProject2 
+cjohn3@6f65a9451746 ~/MiniProject2
+ % ls
+cjohn3-MiniProject2.ipynb  extrNpm.py	readGit.py  readNpm.py
+compareRels.py		   extrRels.py	README.md
+cjohn3@6f65a9451746 ~/MiniProject2
+ % nano readNpm.py 
+zsh: command not found: nano
+cjohn3@6f65a9451746 ~/MiniProject2
+ % vi readNpm.py 
+cjohn3@6f65a9451746 ~/MiniProject2
+ % ls
+cjohn3-MiniProject2.ipynb  extrNpm.py	readGit.py  readNpm.py
+compareRels.py		   extrRels.py	README.md
+cjohn3@6f65a9451746 ~/MiniProject2
+ % zcat /data/NPMvulnerabilities/NPMpkglist/NPMpkglist_XX.gz | python3 readNpm.py
+gzip: /data/NPMvulnerabilities/NPMpkglist/NPMpkglist_XX.gz: No such file or directory
+cjohn3@6f65a9451746 ~/MiniProject2
+ % cd ../..
+cjohn3@6f65a9451746 /home % ls
+cjohn3	jovyan
+cjohn3@6f65a9451746 /home % cd cjohn3
+cjohn3@6f65a9451746 ~ % ls
+FlightCost  gcloud  MiniProject1  MiniProject2	Practice0
+cjohn3@6f65a9451746 ~ % cd /data/
+cjohn3@6f65a9451746 /data % ls
+bitcoin		fdac17		   linux	    NPMvulnerabilities	tools
+Bitcoin-fdac17	ipython		   logs		    opensecrets		twitter
+cve		libraries.io.data  neo4j	    README.md
+delta		LinkedIn	   NPMDependencies  sources
+cjohn3@6f65a9451746 /data % cd ..
+cjohn3@6f65a9451746 / % ls
+bin   etc				lib    mnt   run   sys
+boot  git-lfs-1.4.4			lib64  opt   sbin  tmp
+data  git-lfs-linux-amd64-1.4.4.tar.gz	local  proc  src   usr
+dev   home				media  root  srv   var
+cjohn3@6f65a9451746 / % cd home/cjohn3 
+cjohn3@6f65a9451746 ~ % ls
+FlightCost  gcloud  MiniProject1  MiniProject2	Practice0
+cjohn3@6f65a9451746 ~ % cd MiniProject2
+cjohn3@6f65a9451746 ~/MiniProject2
+ % ls
+cjohn3-MiniProject2.ipynb  extrNpm.py	readGit.py  readNpm.py
+compareRels.py		   extrRels.py	README.md
+cjohn3@6f65a9451746 ~/MiniProject2
+ % cd /data/
+cjohn3@6f65a9451746 /data % cd ~/MiniProject2 
+cjohn3@6f65a9451746 ~/MiniProject2
+ % ls
+cjohn3-MiniProject2.ipynb  extrNpm.py	readGit.py  readNpm.py
+compareRels.py		   extrRels.py	README.md
+cjohn3@6f65a9451746 ~/MiniProject2
+ % zcat /data/NPMvulnerabilities/NPMpkglist/NPMpkglist_9.gz | python3 readNpm.py
+0;armet
+0;ndarray-diagonal
+<class 'bson.errors.InvalidDocument'>;webgen
+0;teascript
+0;waterrower
+0;%40episodehunter%2Fthetvdb
+0;acetic
+0;metamask-inpage-provider
+0;%40fesk%2Fmodule-install
+0;typego
+0;npmupdate
+0;wafl
+0;codeid
+0;jsonresume-theme-paper-pt-br
+0;gulp-mathjax-node
+0;cybersquatter
+<class 'bson.errors.InvalidDocument'>;react-listview-keys
+0;hyperterm-dark-drifter
+<class 'bson.errors.InvalidDocument'>;aniq
+0;taffydb-75lb
+0;circuitbox
+0;coffeescript-compiler
+<class 'bson.errors.InvalidDocument'>;hpb-datepicker
+0;redux-controller
+0;week-day
+0;nativescript-iqkeyboardmanager-ns
+0;primer-react
+0;eventemittercollector
+0;gulp-dirlist
+0;demarked
+0;renxiao1016
+0;skangular
+0;react-extract
+0;bitstamp-ws
+0;datatables-quickedit
+0;red5-server
+0;unsplash-scrape
+0;openwhisk-fqn
+0;standalone-mutex
+0;sampleone
+0;madoos-functional-implementations
+<class 'bson.errors.InvalidDocument'>;hoodie.admin
+0;gitkit-widgets
+0;quiqupjs-plugin
+0;avo-react-native-amplitude-analytics
+0;autotec-api-node-client
+0;%40nois%2Freact-native-render-html
+0;smooch-languages
+0;xappconfig
+0;react-mocha-stateless-test-helper
+0;visual-json
+0;cordova-plugin-jshare-qq
+0;fetch-xl
+0;alexa-raspberry
+0;react-echarts-component
+<class 'bson.errors.InvalidDocument'>;react-oxygen-ui-kit
+0;ijdfgbrsn-usdfhdb-ygsfdv
+0;img2base
+0;spa_router
+0;fxq-getip
+0;controlio-result-textlog
+0;hubot-github-name-slack-id-map
+0;renellc
+0;jest-string-object-serializer
+0;%40datafire%2Fnytimes_most_popular_api
+0;phoenix-build
+<class 'bson.errors.InvalidDocument'>;carlopress
+0;terraformer-rtree
+0;bhargav1-demo
+0;homebridge-mqttalarm
+0;lay-js
+0;nodebb-plugin-onesignal
+0;calendariofx-calendario
+0;eser
+0;depth-reader
+0;dtd2mysql
+0;five-bells-shared
+0;day22
+0;node-red-contrib-xiaomi-smart-devices
+0;xtension
+0;imgur-search
+0;flexkit
+0;assert-jsnext
+0;complexmath
+0;%40kinokabaret%2Fflicks
+0;bson-oid
+0;%40storybook%2Fmithril
+0;runpack
+0;vvdev-auth
+0;%40erigby%2Fckeditor-custom
+0;konishileestore
+0;retyped-gruntjs-tsd-ambient
+0;gulp-tslint-jenkins-reporter
+0;conjoin
+0;webpagereport
+0;ember-cli-foreigner
+0;prerender-cache-manager-glue
+0;sequelize-short
+0;yn-react-native-camera
+0;template-npm
+0;zhou-s
+0;kem
+0;prprcssr
+0;fastify-session
+0;%40bcoe%2Fnpme-auth-atlassian-stash
+<class 'bson.errors.InvalidDocument'>;%40pismo%2Fbolt-playground
+0;w9
+<class 'bson.errors.InvalidDocument'>;bandprotocol
+0;vue-count-to
+0;safe-visitor-counter
+0;dmd
+0;angular-chosen
+0;optional-promise
+0;transcrypt
+0;maggienew
+0;larvitsmpp
+0;react-object-fit-cover
+0;passport-atlassian-oauth
+0;ui-element
+0;ee-soa-extension-api
+0;x2node-ws-auth-jwt
+0;babel-plugin-tedium
+0;skyway-sdk
+0;pgyerplugin
+0;static-angular
+0;incog
+0;%40kronoslive%2Fcodeceptjs-utils-helper
+0;santize-json-parse
+0;lc-toolbox
+0;bart-van-der-waerden
+0;jammi
+0;nfs-seneca
+0;test001aaa
+0;sn-app
+0;arraylists
+0;receive-json
+0;bloody-is
+0;%40icon%2Fhawcons-filled
+0;astral-regex
+0;telly
+0;xo-server-auth-github
+0;highcharts-thumbnail-generation
+0;hafas-monitor-departures-ws-server
+0;hubot-future-messages-campfire
+0;vue-c-generator
+0;tabullet
+0;kaop
+0;custom-pages
+0;require-fool-webpack
+0;mupkg
+0;%40aerogear%2Fcordova-plugin-aerogear-security
+0;conjure-typescript
+0;thmeventjs
+0;fulfills
+<class 'bson.errors.InvalidDocument'>;iterm-theme-parser
+0;node-tkinter
+<class 'bson.errors.InvalidDocument'>;%40fatfisz%2Fstyled-jsx
+0;math-powm1
+0;launchnativeapp
+0;react-native-my-library
+0;webpack-config-root
+0;functionly
+0;%40ambassadorai%2Fmenu-webview
+0;trymath
+0;metricsbot
+0;academy-react-scripts
+<class 'bson.errors.InvalidDocument'>;custom-ng2-smart-table
+0;logacious
+0;github-growl
+<class 'bson.errors.InvalidDocument'>;node-keepass-http
+0;demo-ts-oky
+0;notifly
+0;mongo-delta
+0;next.js
+0;%40videojs%2Fmurphy
+0;collection-manager
+0;mongo-dnorm
+<class 'bson.errors.InvalidDocument'>;react-graceful-image
+0;lsify
+0;boxup
+0;continuum
+0;jest-snapshot-serializer-ansi
+0;jmake
+0;test-all-versions
+0;conjugate
+0;xdcc
+0;split-keywords
+0;eslint-config-thinkbrownstone
+0;%40influans%2Finf-date-range-picker
+0;aaa666
+0;deko
+0;pull-batched
+0;ce-heatmap
+0;subpub
+0;pajama
+0;sonarqube
+0;vali-filter
+0;beerkit
+0;apollo-bridge-link
+0;docparse-parse-upload
+0;ng-ant
+0;chai-amorph
+0;xixi-getmovie
+0;dn-template-mota
+<class 'bson.errors.InvalidDocument'>;ng2-image-upload
+0;caf_rpi
+0;%40types%2Fi18next-express-middleware
+0;%40sugarcoated%2Froyal-main
+0;iotivity
+0;tribemedia-kurento-utils
+0;pratos_restart_homebridge_plugin
+0;devapt-app-testbus
+0;engine-napak-assets
+0;beautiful-lies
+<class 'bson.errors.InvalidDocument'>;nu-cache
+0;eslint-plugin-work-co
+0;compare-directories
+0;vue-paginatron
+0;kotatsu
+0;tiny-promises
+0;tidying-media-codec-subtitles-ssa
+0;fix-package-lock
+0;wx-promise-pro
+0;lark-utils
+0;%40aragon%2Fapps-shared-migrations
+0;react-slider-native
+0;react-fancy-component-b
+0;nbtc
+0;nuka-carousel-autoscroll
+0;update-server
+0;vbb-find-stations
+0;api-response-middleware
+<class 'bson.errors.InvalidDocument'>;processto
+0;%40bullzer%2Fcordova-plugin-emdkscanner
+0;typeface-magra
+0;mgv-core
+0;title-loan-orlando
+0;email-sender
+0;port-cli
+0;value-result
+0;async-interaction
+0;generic-ranking-methods
+0;grunt-gumup
+0;easywyg-fileserver
+0;my-npm-test
+0;inline-style
+0;%40nphyx%2Fvanderpool
+0;%40ion-datetime-picker%2Fcalendar-iso-monday
+0;random-a11y-combo
+0;reefscaffold
+0;split-utf8-file
+0;gulp-matcha
+0;leet-speak
+0;performance-tester
+0;%40scola%2Fi18n-data
+0;canal-js-utils
+0;react-manage-core
+0;sync-store-selectors
+0;dev-web-server
+0;vega-embed-v2
+0;twemoji-picker
+<class 'bson.errors.InvalidDocument'>;gulp-hogan-precompile
+0;normalize-registry-url
+0;%409renpoto%2Feslint-config-react
+0;grunt-digest
+0;arcgis-echarts3
+0;zombie2
+0;%40middy%2Fhttp-partial-response
+0;tsame
+0;webpack-memory2fs-plugin
+0;generator-marble
+0;posthtml-bemy
+0;hi-create
+0;athz
+0;hain-plugin-clipboard
+<class 'bson.errors.InvalidDocument'>;docker-discover
+0;grunt-mvndeploy
+<class 'bson.errors.InvalidDocument'>;zc-ripple-lib
+0;jvent
+0;es2015test
+0;gulp-jade-usemin-ltn
+0;react-growth-analytics
+0;cfcmwin
+0;iko-karma-snapshot
+0;flatpickr
+0;edf-service-auth
+0;%40xottabych%2Fmypackagewer
+0;node-etl
+0;mgnt-ui
+0;instant-chat-log
+0;ng-observable-input
+0;graphberry
+0;hubot-partyline
+0;redux-promisify
+0;typetology
+0;%40gerhobbelt%2Fbabel-helper-module-transforms
+0;gitbook-plugin-copy-code
+0;think-stats
+0;serverless-respat-static-cloudfront
+0;loopify
+0;nodebb-widget-singlepost
+0;axe-fx-midi
+<class 'bson.errors.InvalidDocument'>;synchronous.io
+0;clayman
+0;%40vertx%2Fjdbc-client
+0;%40shyftnetwork%2Fshyft_solc
+0;asyncreduce
+0;duxca.wmappcacheproxy.js
+0;vue-tick-debounce
+0;%40types%2Fraven-for-redux
+0;%40koopjs%2Fcache-redis
+0;jskk
+0;react-markdown-demisto
+0;node-cannacoin
+0;jquery-grouprequired
+0;abs-proxy
+0;typeface-rubik-mono-one
+0;kafka-ui-lib
+0;promised-xhr
+0;gap_api
+0;mogen-plugin-storybook
+0;app1604c
+0;exoscript
+<class 'bson.errors.InvalidDocument'>;live-notify
+0;pickle
+0;serverless-athena-plugin
+0;node-invoice
+0;k-photo-upload
+0;if-component
+0;tuofenglyb
+<class 'bson.errors.InvalidDocument'>;%40ionic-native%2Fregula-document-reader
+0;brunch-plugin-seed
+0;async-deferred
+0;%40studionand%2Fstring-utils
+0;piet-interpreter-js
+0;cordova-plugin-app-config
+0;event-sender
+0;%40babel%2Fhelper-function-name
+0;%40types%2Fuinput
+0;giphy-web-sdk-core
+0;ember-cli-legacy-blueprints
+0;aws-api-gateway-client
+0;test-bin-only-poc
+0;kilogramo-libra
+0;tiny-filmmaking-studio
+0;gitbook-start-proyectofinal-noejaco17
+0;read-directory
+0;lifan
+0;ooth-facebook-client
+0;node-mongo-stream
+0;write-stream
+0;playmaths
+0;page-walker
+0;%40quarterto%2Fnthback
+0;following-mongoose-schema
+0;specular
+0;steal-server
+0;sweet11606
+0;zipkin-transport-file
+0;structure-share
+0;silverscript.io
+0;raptor-query
+<class 'bson.errors.InvalidDocument'>;analyze-deps-cli
+0;nalk
+0;nakedcreativity-liquid
+0;flexy-breakpoint
+0;hubot-fun
+0;aureooms-js-collections-deque
+0;react-banner-slider
+0;dva-decorator
+0;compatibility-array-includes
+0;weex-loading-enhancer
+0;bash-require
+0;%40clarketm%2Fsuperlinkedlist
+0;paas-three
+0;cb-http-client
+0;gobble-rollup
+0;graphql-schema-from-swagger
+0;tomatolog
+0;less-helpers
+0;nodegit-http
+0;ember-cli-google-contacts
+0;%40cloudflare%2Futil-async
+0;metro-select
+0;%40wjet%2Fwj-common-react
+<class 'bson.errors.InvalidDocument'>;github-get
+0;wikidata-lang
+<class 'bson.errors.InvalidDocument'>;dockshell
+<class 'bson.errors.InvalidDocument'>;jishnudemolibrary
+0;ewd-ripple
+0;chartist-hover
+0;simple-download
+0;react-native-chartboost
+0;react-blockies
+0;require-bean
+<class 'bson.errors.InvalidDocument'>;ican-mobile
+0;angular-minimalist-confirm
+0;microevents
+0;js-object-updater
+<class 'bson.errors.InvalidDocument'>;littlehand
+0;%40humany%2Fwidget-types-bot
+0;%40springworks%2Fstrongbox
+0;fie-home
+0;haiticss
+0;gulp-json-to-schema
+0;switcher
+0;screen-shot
+0;base-frame
+0;angular-brunch-seed-no-fuss
+<class 'bson.errors.InvalidDocument'>;npm-submodules
+0;allume
+0;grunt-digraph
+0;lucid-programming
+0;sineku-cli-03
+0;dc-rbac
+0;sequel-orm
+<class 'bson.errors.InvalidDocument'>;cloud-ui.vusion
+0;%40mooretodd%2Fseek_cart
+0;ogre-js
+
