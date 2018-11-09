@@ -1,7 +1,8 @@
 #!/usr/bin/python
 import MySQLdb
 import numpy as np
-import matplotlib.pylot as plt
+import matplotlib; matplotlib.use('agg') 
+import matplotlib.pyplot as plt
 
 def extractDataODQ():
     db = MySQLdb.connect(host="10.16.0.3",    # your host, usually localhost
@@ -37,7 +38,7 @@ def extractPassPriceODQ(org, des, quart):
 
     origin = org
     dest = des
-    quarter = quart
+    quarter = str(quart)
 
     command = 'Select mktFare FROM HistoricalData WHERE Origin = "' + origin + '" AND Dest = "' + dest + '" AND Quarter = "' + quarter + '" AND Passengers = "1"'
 
