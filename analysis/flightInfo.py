@@ -1,7 +1,7 @@
 #!/usr/bin/python
 import MySQLdb
 import numpy as np
-import matplotlib.pylot as plt
+import matplotlib.pyplot as plt
 
 def extractDataODQ():
     db = MySQLdb.connect(host="10.16.0.3",    # your host, usually localhost
@@ -105,5 +105,3 @@ def yearlyTrend():
     plt.xlabel("Fiscal Quarter")
     plt.xticks(range(1,5), ('Jan-Mar', 'Apr-Jun', 'Jul-Sep', 'Oct-Dec'))
     plt.savefig("./yearlyTrend_"+origin+"_"+dest+".pdf")
-
-
