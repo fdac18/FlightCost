@@ -69,7 +69,9 @@ if __name__ == '__main__':
     if (len(merged) != len(market)):
         print("The result of the merge produced a file with a different row count than expected (it should match the row count of the Market csv). Double check to see if the resulting file looks correct!")
     merged = merged[ordered_cols]
-    merged.insert(0, 'ID', 'NULL');
+    merged.insert(0, 'ID', 'NULL')
+    merged = merged[merged.Passengers <= 4]
+    merged = merged.sample(400000)
     merged.to_csv(output_name, index=False, header=False)
     print("Successfully merged {} and {} into {}!".format(sys.argv[1], sys.argv[2], output_name))
 
