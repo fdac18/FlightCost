@@ -1,6 +1,12 @@
 #!/usr/bin/python
 import MySQLdb
-from flightInfo import extractDataODQ, extractDataOD, avgCostperQ
+from flightInfo import (
+        extractDataODQ,
+        extractDataOD,
+        avgCostperQ,
+        yearlyTrend,
+        yearlyTrendAuto,
+        airportsNearCoords)
 '''
 data1 = extractDataODQ()
 for row in data1:
@@ -12,5 +18,6 @@ for row in data2:
     print '\n'
 '''
 # Test avgCost func
-price= avgCostperQ()
-print price
+# price= avgCostperQ()
+# print price
+yearlyTrendAuto()
