@@ -11,6 +11,8 @@ import matplotlib.pyplot as plt
 
 GMAPS_KEY = 'AIzaSyCC7J4WeMBCJiwoEPUhm9-mOZlc8NDR7Kc'
 MILE_RADIUS = 160
+AVG_GAS = 2.60
+AVG_MPG = 22
 def connect():
     db = MySQLdb.connect(host="10.16.0.3",          # your host, usually localhost
                          user="root",               # your username
@@ -34,6 +36,33 @@ def airportsNearCoords(location, radius):
     near = sorted(geo_a.findNearPoint((lat0, long0), radius))
     airports = [k for _, k in near if k in IATA]
     return airports
+
+def drivingDistance(start, end):
+    gmaps = googlemaps.Client(key=GMAPS_KEY)
+    g = geocoders.GoogleV3(api_key=GMAPS_KEY)
+    dist = 0
+
+    startAddress, (latitude, longitude) = g.geocode(start, exactly_one=True)
+    startCoords = (latitude, longitude)
+
+    endAddress, (latitude, longitude) = g.geocode(end, exactly_one=True)
+    endCoords = (latitude, longitude)
+    
+    print "Start address " + startAddress + "\n"
+    print "End address " + endAddress + "\n"
+
+    estDistance = distance.distance(startCoords, endCoords).miles
+    print "\t Est Distance: " + str(estDistance) + " miles\n"
+
+    try:
+        directions = gmaps.directions(startCoords, endCoords)
+        driving = directions[0]['legs'][0]['distance']['value']/1609.34
+        dist = driving
+        print "\t Driving distance: %.2f miles." % driving
+    except:
+        dist = estDistance
+
+    return dist
 
 def extractDataODQ():
     db = connect()
@@ -130,15 +159,20 @@ def yearlyTrend():
 def yearlyTrendAuto():
 
     start = raw_input('Enter your location: ')
-    radius = raw_input('Search for airports within how many miles of your location?: ')
-    dest = raw_input('Input destination airport: ')
+    radius = float(raw_input('Search for airports within how many miles of your location?: '))*1.609
+    dest = raw_input('Input destination airport (IATA code - i.e. JFK, LAX, CHA): ')[:3]
+    gasYN = raw_input('Include driving (gas) to airport costs in calculation? [Y/N] ')
+    gasYN = gasYN.lower()[:1]
 
     originAirports = airportsNearCoords(start, radius)
     print "Got airports " + str(originAirports)
 
     
     plt.style.use('ggplot')
-    plt.suptitle("Yearly Trend of Flight Cost Per Passenger")
+    if gasYN == 'y':
+        plt.suptitle("Yearly Trend of Flight Cost Per Passenger (including gas costs)")
+    else:
+        plt.suptitle("Yearly Trend of Flight Cost Per Passenger")
     plt.title(start + ' to ' + dest)
     plt.ylabel("Cost in USD ($)")
     plt.xlabel("Fiscal Quarter")
@@ -149,7 +183,11 @@ def yearlyTrendAuto():
     for origin in originAirports:
         cost=[]
         for i in range(1,5):
-            cost.append(avgCostperQinternal(origin, dest, i))
+            if gasYN == 'y':
+                drivingCost = float((drivingDistance(start, origin + " airport")/AVG_MPG) * AVG_GAS)
+                cost.append(float(avgCostperQinternal(origin, dest, i)) + drivingCost)
+            else:
+                cost.append(avgCostperQinternal(origin, dest, i))
         plt.plot(range(1, 5), cost, label=origin)
 
     plt.legend()

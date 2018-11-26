@@ -5,6 +5,7 @@ from flightInfo import (
         extractDataOD,
         avgCostperQ,
         yearlyTrend,
+        drivingDistance,
         yearlyTrendAuto,
         airportsNearCoords)
 '''
