@@ -180,6 +180,7 @@ def yearlyTrendAuto():
     start = start.replace(" ", "")
     fname = "yearlyTrendAuto_" + start + "_" + dest + ".pdf"
 
+    airportAvgs=[]
     for origin in originAirports:
         cost=[]
         for i in range(1,5):
@@ -188,11 +189,32 @@ def yearlyTrendAuto():
                 cost.append(float(avgCostperQinternal(origin, dest, i)) + drivingCost)
             else:
                 cost.append(avgCostperQinternal(origin, dest, i))
-        plt.plot(range(1, 5), cost, label=origin)
-
+        plt.plot(range(1, 5), cost, label=origin, marker="o")
+        airportAvgs.append(np.mean(cost))
+    print(airportAvgs)
     plt.legend()
     plt.savefig(fname)
+    plt.close()
+
+    fname2 = "airportAvgs_" + start+ ".pdf"
+    # Make second cost plot
+    plt.style.use('ggplot')
+    plt.suptitle("Average Cost to Destination per Airport")
+    plt.title('Your Area to ' + dest)
+    plt.bar(range(1, len(originAirports)+1), airportAvgs, color='#4885ed')
+    plt.ylabel("Avg. Cost in USD ($)")
+    plt.xlabel("Airport")
+    plt.xticks(range(1, len(originAirports)+1),[x for x in originAirports])
+    plt.savefig(fname2)
+
     print "Attempting to move the file into Google Storage Bucket\n"
     command = "gsutil cp " + fname + " gs://graph_data"
     command = command.split()
     move_file = subprocess.call(command)
+
+    
+    print "Attempting to move the file into Google Storage Bucket\n"
+    command = "gsutil cp " + fname2 + " gs://graph_data"
+    command = command.split()
+    move_file = subprocess.call(command)
+
