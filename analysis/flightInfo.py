@@ -156,6 +156,41 @@ def yearlyTrend():
     plt.savefig("./yearlyTrend_"+origin+"_"+dest+".pdf")
 
 
+def airportNoDest(originAirports, start, gasYN):
+    fname = "airportAvgsNoDest_" + start + ".pdf"
+
+    db = connect()
+    cur = db.cursor()
+
+    airportAvgs = []
+    for origin in originAirports:
+        command = 'Select AVG(mktFare) FROM HistoricalData WHERE Origin = "' + origin + '"'
+        cur.execute(command)
+        result2 = cur.fetchone()[0]
+        print(str(result2))
+        if gasYN == 'y':
+            drivingCost = float((drivingDistance(start, origin + " airport")/AVG_MPG) * AVG_GAS)
+            airportAvgs.append(float(result2) + drivingCost)
+        else:
+            airportAvgs.append(float(result2) + drivingCost)
+
+    db.close()
+    print(airportAvgs)
+
+    plt.style.use('ggplot')
+    plt.title('Average Cost per Airport in General')
+    plt.bar(range(1, len(originAirports)+1), airportAvgs, color='#4885ed')
+    plt.ylabel("Avg. Cost in USD ($)")
+    plt.xlabel("Airport")
+    plt.xticks(range(1, len(originAirports)+1),[x for x in originAirports])
+    plt.savefig(fname)
+
+    print "Attempting to move the file into Google Storage Bucket\n"
+    command = "gsutil cp " + fname + " gs://graph_data"
+    command = command.split()
+    move_file = subprocess.call(command)
+
+    
 def yearlyTrendAuto():
 
     start = raw_input('Enter your location: ')
@@ -165,9 +200,11 @@ def yearlyTrendAuto():
     gasYN = gasYN.lower()[:1]
 
     originAirports = airportsNearCoords(start, radius)
+    airportNoDest(originAirports, start, gasYN)
     print "Got airports " + str(originAirports)
 
     
+    plt.figure()
     plt.style.use('ggplot')
     if gasYN == 'y':
         plt.suptitle("Yearly Trend of Flight Cost Per Passenger (including gas costs)")
@@ -194,9 +231,10 @@ def yearlyTrendAuto():
     print(airportAvgs)
     plt.legend()
     plt.savefig(fname)
-    plt.close()
+    plt.clf()
 
     fname2 = "airportAvgs_" + start+ ".pdf"
+    plt.figure()
     # Make second cost plot
     plt.style.use('ggplot')
     plt.suptitle("Average Cost to Destination per Airport")
