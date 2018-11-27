@@ -1,5 +1,6 @@
 #!/usr/bin/python
 from geopy import geocoders, distance
+import sys
 import subprocess
 import googlemaps
 from GeoBases import GeoBase
@@ -8,6 +9,7 @@ import numpy as np
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+from matplotlib.font_manager import FontProperties
 
 GMAPS_KEY = 'AIzaSyCC7J4WeMBCJiwoEPUhm9-mOZlc8NDR7Kc'
 MILE_RADIUS = 160
@@ -200,10 +202,9 @@ def yearlyTrendAuto():
     gasYN = gasYN.lower()[:1]
 
     originAirports = airportsNearCoords(start, radius)
-    airportNoDest(originAirports, start, gasYN)
+    airportNoDest(originAirports, start.replace(" ", ""), gasYN)
     print "Got airports " + str(originAirports)
 
-    
     plt.figure()
     plt.style.use('ggplot')
     if gasYN == 'y':
@@ -220,22 +221,26 @@ def yearlyTrendAuto():
     airportAvgs=[]
     for origin in originAirports:
         cost=[]
+        drivingDist = drivingDistance(start, origin + " airport")
+        drivingCost = float(drivingDist/AVG_MPG) * AVG_GAS
         for i in range(1,5):
             if gasYN == 'y':
-                drivingCost = float((drivingDistance(start, origin + " airport")/AVG_MPG) * AVG_GAS)
                 cost.append(float(avgCostperQinternal(origin, dest, i)) + drivingCost)
             else:
                 cost.append(avgCostperQinternal(origin, dest, i))
-        plt.plot(range(1, 5), cost, label=origin, marker="o")
+        label = origin + " (" + str(int(drivingDist)) + " mi away)"
+        plt.plot(range(1, 5), cost, label=label, marker="o")
         airportAvgs.append(np.mean(cost))
     print(airportAvgs)
-    plt.legend()
+    fontP = FontProperties()
+    fontP.set_size('small')
+    plt.legend(prop=fontP, loc="best")
     plt.savefig(fname)
     plt.clf()
 
+    # Make second cost plot
     fname2 = "airportAvgs_" + start+ ".pdf"
     plt.figure()
-    # Make second cost plot
     plt.style.use('ggplot')
     plt.suptitle("Average Cost to Destination per Airport")
     plt.title('Your Area to ' + dest)
@@ -244,6 +249,8 @@ def yearlyTrendAuto():
     plt.xlabel("Airport")
     plt.xticks(range(1, len(originAirports)+1),[x for x in originAirports])
     plt.savefig(fname2)
+    plt.clf()
+
 
     print "Attempting to move the file into Google Storage Bucket\n"
     command = "gsutil cp " + fname + " gs://graph_data"
